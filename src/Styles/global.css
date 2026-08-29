@@ -51,3 +51,7 @@ a:hover {
   color: #9c1730;
   text-decoration: underline;
 }
+.netlify-badge,
+iframe[src*="netlify"] {
+  display: none !important;
+}
