@@ -139,7 +139,7 @@
 .dashboard-heatmap-sub {
   color: #9ba0a5;
   font-size: 12px;
-  margin: 2px 0 12px;
+  margin: 2px 0 25px;
 }
 
 .dashboard-heatmap {
@@ -244,6 +244,7 @@
 
 .dashboard-program-card .card-body {
   padding: 22px !important;
+  height: 147px;
 }
 
 .dashboard-program-title {
@@ -260,6 +261,7 @@
   font-size: 18px;
   font-weight: 700;
   margin: 0;
+  margin-bottom: 10px;
 }
 
 .dashboard-program-meta {
@@ -373,6 +375,55 @@
   box-shadow: 0 0 40px rgba(196, 30, 58, 0.5) !important;
 }
 
+.flip-card-container {
+  perspective: 1200px;
+  height: 313px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.flip-card-container.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 6px;
+}
+
+.flip-card-front {
+  transform: rotateY(0deg);
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+.chart-flip-btn {
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 5px 12px !important;
+  border-radius: 6px !important;
+  transition: all 0.3s ease !important;
+  background: transparent !important;
+}
+
+.chart-flip-btn:hover {
+  background: rgba(196, 30, 58, 0.1) !important;
+  border-color: rgba(196, 30, 58, 0.5) !important;
+}
+
 @media (max-width: 768px) {
   .dashboard-page {
     padding: 16px 0 40px;
@@ -435,5 +486,38 @@
 
   .dashboard-heatmap-weekdays span {
     height: 18px;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-card .card-body {
+    padding: 20px 22px !important;
+  }
+
+  .dashboard-card-label {
+    font-size: 11px !important;
+    letter-spacing: 0.7px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .dashboard-card-value {
+    font-size: 28px !important;
+    line-height: normal !important;
+  }
+
+  .dashboard-card-icon {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 20px !important;
+    border-radius: 10px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .dashboard-card-change {
+    font-size: 12px !important;
+  }
+
+  .flip-card-container {
+    height: 260px;
   }
 }

@@ -58,6 +58,24 @@ export default function WorkoutDetail() {
     )
   }
 
+  const totalVolume = workout.volume || 0
+  const durationMin = workout.duration || 0
+
+  const totalSets = (workout.exercises ?? []).reduce(
+    (acc: number, ex: any) => acc + (ex.sets ?? 0),
+    0,
+  )
+
+  const totalReps = (workout.exercises ?? []).reduce(
+    (acc: number, ex: any) =>
+      acc + (parseInt(ex.reps, 10) || 0) * (ex.sets ?? 0),
+    0,
+  )
+
+  const estimatedCalories = Math.round(
+    totalVolume / 10 + durationMin * 5 + totalSets * 2,
+  )
+
   return (
     <div className="workoutdetail-page">
       <Container fluid className="px-3 px-md-4">
@@ -99,7 +117,7 @@ export default function WorkoutDetail() {
               <Card.Body className="text-center">
                 <p className="workoutdetail-stat-label">Volume</p>
                 <h4 className="workoutdetail-stat-value">
-                  {workout.volume} kg
+                  {totalVolume.toLocaleString()} kg
                 </h4>
               </Card.Body>
             </Card>
@@ -109,7 +127,7 @@ export default function WorkoutDetail() {
               <Card.Body className="text-center">
                 <p className="workoutdetail-stat-label">Calories</p>
                 <h4 className="workoutdetail-stat-value">
-                  {workout.calories} kcal
+                  {estimatedCalories} kcal
                 </h4>
               </Card.Body>
             </Card>
@@ -176,10 +194,7 @@ export default function WorkoutDetail() {
                     Total Sets
                   </span>
                   <span className="workoutdetail-summary-value">
-                    {(workout.exercises ?? []).reduce(
-                      (acc: number, ex: any) => acc + (ex.sets ?? 0),
-                      0,
-                    )}
+                    {totalSets}
                   </span>
                 </div>
                 <div className="workoutdetail-summary-item">
@@ -187,11 +202,7 @@ export default function WorkoutDetail() {
                     Total Reps
                   </span>
                   <span className="workoutdetail-summary-value">
-                    {(workout.exercises ?? []).reduce(
-                      (acc: number, ex: any) =>
-                        acc + (parseInt(ex.reps, 10) || 0) * (ex.sets ?? 0),
-                      0,
-                    )}
+                    {totalReps}
                   </span>
                 </div>
                 <div className="workoutdetail-summary-item">
@@ -205,8 +216,10 @@ export default function WorkoutDetail() {
                   </span>
                 </div>
                 <div className="workoutdetail-summary-item">
-                  <span className="workoutdetail-summary-label">PRs</span>
-                  <span className="workoutdetail-summary-value">—</span>
+                  <span className="workoutdetail-summary-label">Calories</span>
+                  <span className="workoutdetail-summary-value">
+                    {estimatedCalories} kcal
+                  </span>
                 </div>
 
                 <hr className="workoutdetail-divider" />

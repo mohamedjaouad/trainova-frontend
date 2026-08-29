@@ -57,6 +57,7 @@ export default function Dashboard() {
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [flipped, setFlipped] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem("token")
@@ -103,16 +104,11 @@ export default function Dashboard() {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
 
-    // Lunedì=0 ... Domenica=6 (getDay() nativo è Domenica=0 ... Sabato=6)
     const mondayIndex = (d: Date) => (d.getDay() + 6) % 7
 
-    // Lunedì della settimana corrente
     const currentMonday = new Date(today)
     currentMonday.setDate(currentMonday.getDate() - mondayIndex(today))
 
-    // Andiamo indietro di altre 3 settimane per avere sempre 4 settimane
-    // complete (28 giorni), che iniziano sempre di lunedì: così la griglia
-    // non ha mai bisogno di celle vuote iniziali o finali.
     const startMonday = new Date(currentMonday)
     startMonday.setDate(startMonday.getDate() - 21)
 
@@ -150,20 +146,32 @@ export default function Dashboard() {
   }, [workouts])
 
   const barData = {
-    labels: activity.realDays
-      .slice(-7)
-      .map((day) => day.date.toLocaleDateString("it-IT", { weekday: "short" })),
+    labels: ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"],
     datasets: [
       {
         label: "Allenamenti",
-        data: activity.realDays
-          .slice(-7)
-          .map((day) => (day.status === "done" ? 1 : 0)),
+        data: [0, 0, 0, 0, 0, 0, 0],
         backgroundColor: "#c41e3a",
         borderRadius: 4,
       },
     ],
   }
+
+  const currentWeekDays = activity.realDays.slice(-7)
+  const mondayIndex = (new Date().getDay() + 6) % 7
+  const currentMonday = new Date()
+  currentMonday.setDate(currentMonday.getDate() - mondayIndex)
+  currentMonday.setHours(0, 0, 0, 0)
+
+  const currentWeekData = [0, 0, 0, 0, 0, 0, 0]
+  currentWeekDays.forEach((day) => {
+    const dayOfWeekIndex = (day.date.getDay() + 6) % 7
+    if (day.status === "done") {
+      currentWeekData[dayOfWeekIndex] = 1
+    }
+  })
+
+  barData.datasets[0].data = currentWeekData
 
   const options = {
     responsive: true,
@@ -258,7 +266,7 @@ export default function Dashboard() {
           <Metric
             label="Total Workouts"
             value={String(workouts.length)}
-            icon="bi-dumbbell"
+            icon="bi-activity"
             detail="Sessioni salvate"
           />
           <Metric
@@ -282,156 +290,191 @@ export default function Dashboard() {
         </Row>
 
         <Row className="g-3 g-md-4 mt-2">
-          <Col lg={8}>
-            <Card className="dashboard-chart-card">
-              <Card.Body>
-                <h5 className="dashboard-chart-title">Costanza</h5>
-                <p className="dashboard-heatmap-sub">
-                  Ultime 4 settimane · {activeDays} giorni attivi
-                </p>
-                <div className="dashboard-heatmap">
-                  <div className="dashboard-heatmap-weekdays">
-                    <span>L</span>
-                    <span>M</span>
-                    <span>M</span>
-                    <span>G</span>
-                    <span>V</span>
-                    <span>S</span>
-                    <span>D</span>
-                  </div>
-                  <div className="dashboard-heatmap-grid">
-                    {activity.days.map((day) => (
-                      <span
-                        key={dateKey(day.date)}
-                        className={`dashboard-heatmap-cell ${day.status}`}
-                        title={day.date.toLocaleDateString("it-IT")}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col lg={4}>
-            <Card className="dashboard-chart-card">
-              <Card.Body>
-                <h5 className="dashboard-chart-title mb-3">
-                  Attività settimanale
-                </h5>
-                <div style={{ height: "180px" }}>
-                  <Bar data={barData} options={options} />
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-
-        <Row className="g-3 g-md-4 mt-2">
           <Col lg={6}>
-            <Card className="dashboard-program-card">
-              <Card.Body>
-                <div className="d-flex justify-content-between align-items-start">
-                  <div>
-                    <h5 className="dashboard-program-title">
-                      Programma attivo
-                    </h5>
-                    {program ? (
-                      <>
-                        <p className="dashboard-program-name">{program.name}</p>
-                        <p className="dashboard-program-meta">
-                          {program.style} · {program.weeksDuration} settimane
-                        </p>
-                        <div style={{ maxWidth: "280px" }}>
-                          <div className="d-flex justify-content-between">
+            <div
+              className={`flip-card-container ${flipped ? "flipped" : ""}`}
+              style={{ position: "relative" }}
+            >
+              <button
+                className="chart-flip-btn"
+                style={{
+                  position: "absolute",
+                  top: 14,
+                  right: 14,
+                  zIndex: 10,
+                }}
+                onClick={() => setFlipped(!flipped)}
+              >
+                <i
+                  className={`bi ${flipped ? "bi-calendar-week" : "bi-bar-chart"}`}
+                ></i>
+                {flipped ? " Costanza" : " Attività settimanale"}
+              </button>
+
+              <div className="flip-card-inner">
+                <div className="flip-card-face flip-card-front">
+                  <Card
+                    className="dashboard-chart-card"
+                    style={{ height: "100%" }}
+                  >
+                    <Card.Body>
+                      <h5 className="dashboard-chart-title">Costanza</h5>
+                      <p className="dashboard-heatmap-sub">
+                        Ultime 4 settimane · {activeDays} giorni attivi
+                      </p>
+                      <div className="dashboard-heatmap">
+                        <div className="dashboard-heatmap-weekdays">
+                          <span>L</span>
+                          <span>M</span>
+                          <span>M</span>
+                          <span>G</span>
+                          <span>V</span>
+                          <span>S</span>
+                          <span>D</span>
+                        </div>
+                        <div className="dashboard-heatmap-grid">
+                          {activity.days.map((day) => (
                             <span
-                              className="text-secondary"
-                              style={{ fontSize: "12px" }}
-                            >
-                              Progresso
-                            </span>
-                            <span
-                              style={{
-                                fontSize: "12px",
-                                color: "#c41e3a",
-                                fontWeight: "600",
-                              }}
-                            >
-                              {programProgress}%
+                              key={dateKey(day.date)}
+                              className={`dashboard-heatmap-cell ${day.status}`}
+                              title={day.date.toLocaleDateString("it-IT")}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </div>
+
+                <div className="flip-card-face flip-card-back">
+                  <Card
+                    className="dashboard-chart-card"
+                    style={{ height: "100%" }}
+                  >
+                    <Card.Body>
+                      <h5 className="dashboard-chart-title mb-3">
+                        Attività settimanale
+                      </h5>
+                      <div style={{ height: "180px" }}>
+                        <Bar data={barData} options={options} />
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </div>
+              </div>
+            </div>
+          </Col>
+
+          <Col lg={6}>
+            <Row className="g-3">
+              <Col xs={12}>
+                <Card className="dashboard-program-card">
+                  <Card.Body>
+                    <div className="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h5 className="dashboard-program-title">
+                          Programma attivo
+                        </h5>
+                        {program ? (
+                          <>
+                            <p className="dashboard-program-name">
+                              {program.name}
+                            </p>
+
+                            <div style={{ maxWidth: "280px" }}>
+                              <div className="d-flex justify-content-between">
+                                <span
+                                  className="text-secondary"
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  Progresso
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: "12px",
+                                    color: "#c41e3a",
+                                    fontWeight: "600",
+                                  }}
+                                >
+                                  {programProgress}%
+                                </span>
+                              </div>
+                              <ProgressBar
+                                now={programProgress}
+                                className="dashboard-progress-bar"
+                              />
+                            </div>
+                          </>
+                        ) : (
+                          <p className="dashboard-program-meta">
+                            Nessun programma attivo.
+                          </p>
+                        )}
+                      </div>
+                      <Button
+                        variant="outline-light"
+                        className="dashboard-program-btn"
+                        onClick={() =>
+                          navigate(program ? "/program-detail" : "/ai-coach")
+                        }
+                      >
+                        {program ? "Vedi programma" : "Genera"}
+                      </Button>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              <Col xs={12}>
+                <Card className="dashboard-workout-card">
+                  <Card.Body>
+                    {program && nextDay ? (
+                      <div className="d-flex justify-content-between align-items-start">
+                        <div>
+                          <span className="dashboard-workout-badge">
+                            Prossimo allenamento
+                          </span>
+                          <h5 className="dashboard-workout-name">
+                            {nextDay.title}
+                          </h5>
+                          <div className="dashboard-workout-stats">
+                            <span>
+                              <i className="bi bi-list-check"></i>{" "}
+                              {nextDay.exercises.length} esercizi
                             </span>
                           </div>
-                          <ProgressBar
-                            now={programProgress}
-                            className="dashboard-progress-bar"
-                          />
                         </div>
-                      </>
+                        <Button
+                          className="dashboard-workout-btn"
+                          onClick={() =>
+                            navigate("/workout/start", {
+                              state: {
+                                programId: program.id,
+                                programName: program.name,
+                                style: program.style,
+                                day: nextDay,
+                                dayIndex: nextDayIndex,
+                                totalDaysPerWeek: program.days.length,
+                              },
+                            })
+                          }
+                        >
+                          START WORKOUT
+                        </Button>
+                      </div>
                     ) : (
-                      <p className="dashboard-program-meta">
-                        Nessun programma attivo.
+                      <p className="dashboard-workout-meta">
+                        {!program
+                          ? "Genera un programma per iniziare un allenamento."
+                          : programComplete
+                            ? "Complimenti, hai completato tutte le settimane del programma!"
+                            : "Nessun giorno disponibile."}
                       </p>
                     )}
-                  </div>
-                  <Button
-                    variant="outline-light"
-                    className="dashboard-program-btn"
-                    onClick={() =>
-                      navigate(program ? "/program-detail" : "/ai-coach")
-                    }
-                  >
-                    {program ? "Vedi programma" : "Genera"}
-                  </Button>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col lg={6}>
-            <Card className="dashboard-workout-card">
-              <Card.Body>
-                {program && nextDay ? (
-                  <div className="d-flex justify-content-between align-items-start">
-                    <div>
-                      <span className="dashboard-workout-badge">
-                        Prossimo allenamento
-                      </span>
-                      <h5 className="dashboard-workout-name">
-                        {nextDay.title}
-                      </h5>
-                      <div className="dashboard-workout-stats">
-                        <span>
-                          <i className="bi bi-list-check"></i>{" "}
-                          {nextDay.exercises.length} esercizi
-                        </span>
-                      </div>
-                    </div>
-                    <Button
-                      className="dashboard-workout-btn"
-                      onClick={() =>
-                        navigate("/workout/start", {
-                          state: {
-                            programId: program.id,
-                            programName: program.name,
-                            style: program.style,
-                            day: nextDay,
-                            dayIndex: nextDayIndex,
-                            totalDaysPerWeek: program.days.length,
-                          },
-                        })
-                      }
-                    >
-                      START WORKOUT
-                    </Button>
-                  </div>
-                ) : (
-                  <p className="dashboard-workout-meta">
-                    {!program
-                      ? "Genera un programma per iniziare un allenamento."
-                      : programComplete
-                        ? "Complimenti, hai completato tutte le settimane del programma!"
-                        : "Nessun giorno disponibile."}
-                  </p>
-                )}
-              </Card.Body>
-            </Card>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Container>
