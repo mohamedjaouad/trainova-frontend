@@ -12,7 +12,7 @@ import Layout from "./components/common/Layout/Layout"
 import ProtectedRoute from "./components/common/ProtectedRoute"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
-import "./styles/global.css"
+import "./Styles/global.css"
 
 function App() {
   return (
