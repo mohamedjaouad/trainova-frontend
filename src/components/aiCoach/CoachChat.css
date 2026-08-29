@@ -1,0 +1,249 @@
+/* ===== CHAT ===== */
+.cc-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 460px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* ===== MESSAGES ===== */
+.cc-log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cc-log::-webkit-scrollbar {
+  width: 4px;
+}
+
+.cc-log::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cc-log::-webkit-scrollbar-thumb {
+  background: rgba(196, 30, 58, 0.3);
+  border-radius: 4px;
+}
+
+/* ===== MESSAGE ROW ===== */
+.cc-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 78%;
+  animation: ccIn 0.3s ease;
+}
+
+.cc-row.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+@keyframes ccIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== AVATAR ===== */
+.cc-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.cc-row.ai .cc-avatar {
+  color: var(--accent);
+  border-color: rgba(196, 30, 58, 0.2);
+  background: var(--accent-dim);
+}
+
+.cc-row.user .cc-avatar {
+  color: var(--text-secondary);
+}
+
+/* ===== BUBBLE ===== */
+.cc-bubble {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.cc-row.ai .cc-bubble {
+  background: var(--accent-dim);
+  border-color: rgba(196, 30, 58, 0.1);
+  border-bottom-left-radius: 2px;
+}
+
+.cc-row.user .cc-bubble {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.04);
+  border-bottom-right-radius: 2px;
+}
+
+/* ===== INPUT ===== */
+.cc-input-row {
+  display: flex;
+  gap: 10px;
+  padding: 14px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.cc-input-row input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  padding: 11px 16px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.cc-input-row input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.4;
+}
+
+.cc-input-row input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.05);
+}
+
+/* ===== SEND BUTTON ===== */
+.cc-send {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--accent), #9c1730);
+  border: none;
+  border-radius: var(--radius);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.cc-send:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(196, 30, 58, 0.3);
+}
+
+.cc-send:active {
+  transform: translateY(0);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .cc-wrap {
+    height: 380px;
+  }
+
+  .cc-log {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .cc-row {
+    max-width: 88%;
+  }
+
+  .cc-bubble {
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+
+  .cc-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .cc-input-row {
+    padding: 10px 14px;
+  }
+
+  .cc-input-row input {
+    font-size: 12px;
+    padding: 10px 14px;
+  }
+
+  .cc-send {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cc-wrap {
+    height: 340px;
+  }
+
+  .cc-log {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .cc-row {
+    max-width: 94%;
+  }
+
+  .cc-bubble {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .cc-avatar {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .cc-input-row {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .cc-input-row input {
+    font-size: 11px;
+    padding: 8px 12px;
+  }
+
+  .cc-send {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+}
