@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background-color: #0a0809;
+  color: #ffffff;
+  min-height: 100vh;
+  min-width: 430px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c41e3a;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9c1730;
+}
+
+::selection {
+  background: #c41e3a;
+  color: #ffffff;
+}
+
+a {
+  color: #c41e3a;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #9c1730;
+  text-decoration: underline;
+}

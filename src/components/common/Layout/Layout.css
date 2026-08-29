@@ -1,0 +1,11 @@
+.layout-main {
+  padding-top: 72px;
+  min-height: 100vh;
+  background: #0a0809;
+}
+
+@media (max-width: 576px) {
+  .layout-main {
+    padding-top: 64px;
+  }
+}
