@@ -37,6 +37,7 @@
 
 .profile-card .card-body {
   padding: 24px !important;
+  min-height: 362px;
 }
 
 .profile-avatar-wrapper {
