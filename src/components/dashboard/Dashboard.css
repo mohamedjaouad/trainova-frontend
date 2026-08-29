@@ -1,0 +1,439 @@
+.dashboard-page {
+  padding: 24px 0 60px;
+  background: #0a0809;
+  min-height: 100vh;
+}
+
+.dashboard-header {
+  margin-bottom: 28px;
+  padding: 20px 24px;
+  background: rgba(10, 8, 9, 0.62);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(196, 30, 58, 0.3);
+  border-radius: 6px;
+}
+
+.dashboard-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.dashboard-subtitle {
+  color: #9ba0a5;
+  font-size: 14px;
+  margin: 4px 0 0;
+}
+
+.dashboard-card {
+  background: rgba(10, 8, 9, 0.62) !important;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(196, 30, 58, 0.2) !important;
+  border-radius: 6px !important;
+  transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+  border-color: rgba(196, 30, 58, 0.5) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(196, 30, 58, 0.05);
+}
+
+.dashboard-card .card-body {
+  padding: 20px 22px !important;
+}
+
+.dashboard-card-label {
+  color: #9ba0a5;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  margin: 0 0 4px;
+}
+
+.dashboard-card-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.dashboard-card-change {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dashboard-card-change.up {
+  color: #4ade80;
+}
+
+.dashboard-card-change.down {
+  color: #f87171;
+}
+
+.dashboard-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(196, 30, 58, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c41e3a;
+  font-size: 20px;
+}
+
+.dashboard-chart-card {
+  background: rgba(10, 8, 9, 0.62) !important;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(196, 30, 58, 0.2) !important;
+  border-radius: 6px !important;
+}
+
+.dashboard-chart-card .card-body {
+  padding: 22px !important;
+}
+
+.dashboard-chart-title {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.dashboard-chart-tabs {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  padding: 3px;
+}
+
+.dashboard-chart-tabs button {
+  background: none;
+  border: none;
+  color: #9ba0a5;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.dashboard-chart-tabs button.active {
+  background: #c41e3a;
+  color: #ffffff;
+}
+
+.dashboard-chart-tabs button:hover:not(.active) {
+  color: #ffffff;
+}
+
+.dashboard-heatmap-sub {
+  color: #9ba0a5;
+  font-size: 12px;
+  margin: 2px 0 12px;
+}
+
+.dashboard-heatmap {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.dashboard-heatmap-weekdays {
+  display: grid;
+  grid-template-rows: repeat(7, 1fr);
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.dashboard-heatmap-weekdays span {
+  display: flex;
+  align-items: center;
+  height: 22px;
+  font-size: 10px;
+  color: #6b6f73;
+  font-weight: 700;
+}
+
+.dashboard-heatmap-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(7, 22px);
+  grid-auto-flow: column;
+  gap: 6px;
+}
+
+.dashboard-heatmap-cell.future {
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.06);
+}
+
+.dashboard-heatmap-cell {
+  border-radius: 4px;
+  width: 100%;
+  height: 22px;
+}
+
+.dashboard-heatmap-cell.done {
+  background: #c41e3a;
+  box-shadow: 0 0 8px rgba(196, 30, 58, 0.4);
+}
+
+.dashboard-heatmap-cell.missed {
+  background: rgba(248, 113, 113, 0.15);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.dashboard-heatmap-cell.rest {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.dashboard-heatmap-legend {
+  display: flex;
+  gap: 18px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.dashboard-heatmap-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #9ba0a5;
+}
+
+.dashboard-heatmap-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+}
+
+.dashboard-heatmap-dot.done {
+  background: #c41e3a;
+}
+
+.dashboard-heatmap-dot.missed {
+  background: rgba(248, 113, 113, 0.4);
+  border: 1px solid rgba(248, 113, 113, 0.5);
+}
+
+.dashboard-heatmap-dot.rest {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dashboard-program-card {
+  background: rgba(10, 8, 9, 0.62) !important;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(196, 30, 58, 0.2) !important;
+  border-radius: 6px !important;
+}
+
+.dashboard-program-card .card-body {
+  padding: 22px !important;
+}
+
+.dashboard-program-title {
+  color: #9ba0a5;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+
+.dashboard-program-name {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.dashboard-program-meta {
+  color: #9ba0a5;
+  font-size: 13px;
+  margin: 2px 0 12px;
+}
+
+.dashboard-program-progress {
+  max-width: 280px;
+}
+
+.dashboard-program-progress span {
+  color: #9ba0a5;
+  font-size: 12px;
+}
+
+.dashboard-progress-bar {
+  height: 4px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-radius: 4px !important;
+}
+
+.dashboard-progress-bar .progress-bar {
+  background: linear-gradient(90deg, #c41e3a, #9c1730) !important;
+  border-radius: 4px !important;
+}
+
+.dashboard-program-btn {
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 6px 16px !important;
+  border-radius: 6px !important;
+  transition: all 0.3s ease !important;
+}
+
+.dashboard-program-btn:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(196, 30, 58, 0.5) !important;
+}
+
+.dashboard-workout-card {
+  background: rgba(10, 8, 9, 0.62) !important;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(196, 30, 58, 0.2) !important;
+  border-radius: 6px !important;
+}
+
+.dashboard-workout-card .card-body {
+  padding: 38px !important;
+}
+
+.dashboard-workout-badge {
+  display: inline-block;
+  background: rgba(196, 30, 58, 0.15);
+  color: #c41e3a;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 2px 10px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.dashboard-workout-name {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.dashboard-workout-meta {
+  color: #9ba0a5;
+  font-size: 13px;
+  margin: 2px 0 10px;
+}
+
+.dashboard-workout-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.dashboard-workout-stats span {
+  color: #9ba0a5;
+  font-size: 12px;
+}
+
+.dashboard-workout-stats i {
+  margin-right: 4px;
+}
+
+.dashboard-workout-btn {
+  background: linear-gradient(135deg, #c41e3a, #9c1730) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px 20px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  color: #fff !important;
+  box-shadow: 0 0 30px rgba(196, 30, 58, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.dashboard-workout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(196, 30, 58, 0.5) !important;
+}
+
+@media (max-width: 768px) {
+  .dashboard-page {
+    padding: 16px 0 40px;
+  }
+
+  .dashboard-header {
+    padding: 16px 18px;
+  }
+
+  .dashboard-title {
+    font-size: 22px;
+  }
+
+  .dashboard-card-value {
+    font-size: 22px;
+  }
+
+  .dashboard-card-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+
+  .dashboard-chart-card .card-body {
+    padding: 16px !important;
+  }
+
+  .dashboard-chart-tabs button {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  .dashboard-program-card .card-body,
+  .dashboard-workout-card .card-body {
+    padding: 16px !important;
+  }
+
+  .dashboard-program-name,
+  .dashboard-workout-name {
+    font-size: 16px;
+  }
+
+  .dashboard-workout-btn {
+    padding: 6px 14px !important;
+    font-size: 11px !important;
+  }
+
+  .dashboard-program-btn {
+    font-size: 11px !important;
+    padding: 4px 12px !important;
+  }
+
+  .dashboard-heatmap-grid {
+    grid-template-rows: repeat(7, 18px);
+  }
+
+  .dashboard-heatmap-cell {
+    height: 18px;
+  }
+
+  .dashboard-heatmap-weekdays span {
+    height: 18px;
+  }
+}
