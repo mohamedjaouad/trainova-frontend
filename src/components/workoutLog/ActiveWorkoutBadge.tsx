@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { loadActiveWorkout } from "./Activeworkoutstorage"
-import "./ActiveworkoutBadge.css"
+import "./ActiveWorkoutBadge.css"
 
 export default function ActiveWorkoutBadge() {
   const navigate = useNavigate()
