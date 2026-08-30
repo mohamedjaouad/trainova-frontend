@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Link, useLocation, useNavigate } from "react-router-dom" // ← AGGIUNGI useNavigate
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Container, Navbar, Nav } from "react-bootstrap"
 import logo from "../../../assets/Logo.png"
 import apiClient from "../../../api/api"
@@ -7,7 +7,7 @@ import "./NavBar.css"
 
 export default function NavBar() {
   const location = useLocation()
-  const navigate = useNavigate() // ← AGGIUNGI
+  const navigate = useNavigate()
   const [scrolled, setScrolled] = useState(false)
   const [expanded, setExpanded] = useState(false)
   const [user, setUser] = useState<{
@@ -38,7 +38,7 @@ export default function NavBar() {
   const navLinks = [
     { path: "/dashboard", label: "Dashboard", icon: "bi-grid-1x2-fill" },
     { path: "/ai-coach", label: "AI Coach", icon: "bi-cpu-fill" },
-    { path: "/workout-log", label: "Workouts", icon: "bi-dumbbell-fill" },
+    { path: "/workout-log", label: "Workouts", icon: "bi bi-activity" },
     { path: "/program-detail", label: "Program", icon: "bi-file-text-fill" },
     { path: "/profile", label: "Profile", icon: "bi-person-fill" },
   ]
@@ -99,15 +99,15 @@ export default function NavBar() {
                 to={link.path}
                 className={`nav-link-custom ${isActive(link.path) ? "active" : ""}`}
                 onClick={() => setExpanded(false)}
+                style={{ textDecoration: "none" }}
               >
-                <i className={`bi ${link.icon}`}></i>
+                <i className={`bi ${link.icon}`} style={{ marginRight: 5 }}></i>
                 <span>{link.label}</span>
                 {isActive(link.path) && <span className="nav-link-glow"></span>}
               </Nav.Link>
             ))}
 
             <div className="nav-right-items d-flex align-items-center gap-2 ms-lg-3">
-              {/* ===== AVATAR CLICCABILE ===== */}
               <div
                 className="nav-avatar"
                 onClick={handleAvatarClick}

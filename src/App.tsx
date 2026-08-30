@@ -7,6 +7,7 @@ import ProgramDetail from "./components/programDetail/ProgramDetail"
 import WorkoutLog from "./components/workoutLog/WorkoutLog"
 import WorkoutDetail from "./components/workoutLog/WorkoutDetail"
 import ActiveWorkout from "./components/workoutLog/ActiveWorkout"
+import ActiveWorkoutBadge from "./components/workoutLog/ActiveWorkoutBadge"
 import Dashboard from "./components/dashboard/Dashboard"
 import Layout from "./components/common/Layout/Layout"
 import ProtectedRoute from "./components/common/ProtectedRoute"
@@ -110,6 +111,7 @@ function App() {
           }
         />
       </Routes>
+      <ActiveWorkoutBadge />
     </Router>
   )
 }

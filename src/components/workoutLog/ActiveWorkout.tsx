@@ -1,21 +1,14 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { Alert, Button, Card, Container, Form, Row, Col } from "react-bootstrap"
 import { useLocation, useNavigate } from "react-router-dom"
 import apiClient from "../../api/api"
+import {
+  saveActiveWorkout,
+  loadActiveWorkout,
+  clearActiveWorkout,
+  type PlannedExercise,
+} from "./Activeworkoutstorage"
 import "./WorkoutLog.css"
-
-interface PlannedExercise {
-  id: string
-  exercise: {
-    id: string
-    name: string
-    muscleGroup?: string
-    imageUrl?: string | null
-  }
-  sets: number
-  reps: string
-  restSeconds: number
-}
 
 interface WorkoutState {
   programId: string
@@ -95,7 +88,7 @@ function ExerciseThumb({
 export default function ActiveWorkout() {
   const location = useLocation()
   const navigate = useNavigate()
-  const workout = location.state as WorkoutState | null
+  const incomingWorkout = location.state as WorkoutState | null
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [values, setValues] = useState<
@@ -103,7 +96,23 @@ export default function ActiveWorkout() {
   >({})
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
 
-  const startedAt = useMemo(() => Date.now(), [])
+  const [workout, setWorkout] = useState<
+    (WorkoutState & { startedAt: number }) | null
+  >(() => {
+    if (incomingWorkout) {
+      const withStart = { ...incomingWorkout, startedAt: Date.now() }
+      saveActiveWorkout({ ...withStart, values: {} })
+      return withStart
+    }
+    const saved = loadActiveWorkout()
+    if (saved) {
+      setTimeout(() => setValues(saved.values), 0)
+      return saved
+    }
+    return null
+  })
+
+  const startedAt = workout?.startedAt ?? Date.now()
 
   useEffect(() => {
     const timer = window.setInterval(
@@ -129,14 +138,18 @@ export default function ActiveWorkout() {
   }
 
   const updateValue = (id: string, field: "reps" | "weight", value: string) => {
-    setValues((current) => ({
-      ...current,
-      [id]: {
-        reps: current[id]?.reps ?? "",
-        weight: current[id]?.weight ?? "",
-        [field]: value,
-      },
-    }))
+    setValues((current) => {
+      const next = {
+        ...current,
+        [id]: {
+          reps: current[id]?.reps ?? "",
+          weight: current[id]?.weight ?? "",
+          [field]: value,
+        },
+      }
+      saveActiveWorkout({ ...workout, values: next })
+      return next
+    })
   }
 
   const finishWorkout = async () => {
@@ -159,8 +172,6 @@ export default function ActiveWorkout() {
         })),
       })
 
-      // Segna il giorno come completato: da qui non sarà più possibile
-      // rifarlo finché non ricomincia una nuova settimana.
       const key = progressKey(workout.programId)
       let stored: { week: number; completedDays: number[] }
       try {
@@ -181,14 +192,13 @@ export default function ActiveWorkout() {
         stored.completedDays.push(dayIdx)
       }
 
-      // Tutti i giorni della settimana fatti? Si passa alla settimana
-      // successiva e il "progresso della settimana" riparte da zero.
       if (stored.completedDays.length >= workout.totalDaysPerWeek) {
         stored.week += 1
         stored.completedDays = []
       }
 
       localStorage.setItem(key, JSON.stringify(stored))
+      clearActiveWorkout()
 
       navigate("/program-detail")
     } catch (requestError) {
