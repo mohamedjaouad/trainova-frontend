@@ -96,21 +96,21 @@ export default function ActiveWorkout() {
   >({})
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
 
-  const [workout, setWorkout] = useState<
-    (WorkoutState & { startedAt: number }) | null
-  >(() => {
-    if (incomingWorkout) {
-      const withStart = { ...incomingWorkout, startedAt: Date.now() }
-      saveActiveWorkout({ ...withStart, values: {} })
-      return withStart
-    }
-    const saved = loadActiveWorkout()
-    if (saved) {
-      setTimeout(() => setValues(saved.values), 0)
-      return saved
-    }
-    return null
-  })
+  const [workout] = useState<(WorkoutState & { startedAt: number }) | null>(
+    () => {
+      if (incomingWorkout) {
+        const withStart = { ...incomingWorkout, startedAt: Date.now() }
+        saveActiveWorkout({ ...withStart, values: {} })
+        return withStart
+      }
+      const saved = loadActiveWorkout()
+      if (saved) {
+        setTimeout(() => setValues(saved.values), 0)
+        return saved
+      }
+      return null
+    },
+  )
 
   const startedAt = workout?.startedAt ?? Date.now()
 
