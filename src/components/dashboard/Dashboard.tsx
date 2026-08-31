@@ -40,11 +40,54 @@ interface Program {
   days: ProgramDay[]
 }
 
+interface CalendarDay {
+  date: Date
+  inMonth: boolean
+  status: "done" | "rest" | "future" | "empty"
+}
+
 const dateKey = (date: Date) => {
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, "0")
   const day = String(date.getDate()).padStart(2, "0")
   return `${year}-${month}-${day}`
+}
+
+const mondayIndex = (d: Date) => (d.getDay() + 6) % 7
+
+const buildMonthCalendar = (
+  monthDate: Date,
+  completed: Set<string>,
+  today: Date,
+): CalendarDay[] => {
+  const year = monthDate.getFullYear()
+  const month = monthDate.getMonth()
+  const firstOfMonth = new Date(year, month, 1)
+  const lastOfMonth = new Date(year, month + 1, 0)
+
+  const gridStart = new Date(firstOfMonth)
+  gridStart.setDate(gridStart.getDate() - mondayIndex(firstOfMonth))
+
+  const gridEnd = new Date(lastOfMonth)
+  gridEnd.setDate(gridEnd.getDate() + (6 - mondayIndex(lastOfMonth)))
+
+  const days: CalendarDay[] = []
+  const cursor = new Date(gridStart)
+  while (cursor.getTime() <= gridEnd.getTime()) {
+    const inMonth = cursor.getMonth() === month
+    const isFuture = cursor.getTime() > today.getTime()
+    const status: CalendarDay["status"] = !inMonth
+      ? "empty"
+      : isFuture
+        ? "future"
+        : completed.has(dateKey(cursor))
+          ? "done"
+          : "rest"
+    days.push({ date: new Date(cursor), inMonth, status })
+    cursor.setDate(cursor.getDate() + 1)
+  }
+
+  return days
 }
 
 export default function Dashboard() {
@@ -58,6 +101,12 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [flipped, setFlipped] = useState(false)
+  const [viewMonth, setViewMonth] = useState(() => {
+    const d = new Date()
+    d.setDate(1)
+    d.setHours(0, 0, 0, 0)
+    return d
+  })
 
   useEffect(() => {
     const token = localStorage.getItem("token")
@@ -96,82 +145,61 @@ export default function Dashboard() {
     fetchData()
   }, [navigate])
 
-  const activity = useMemo(() => {
-    const completed = new Set(
-      workouts.map((workout) => dateKey(new Date(workout.sessionDate))),
-    )
+  const today = useMemo(() => {
+    const d = new Date()
+    d.setHours(0, 0, 0, 0)
+    return d
+  }, [])
 
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
+  const completed = useMemo(
+    () => new Set(workouts.map((w) => dateKey(new Date(w.sessionDate)))),
+    [workouts],
+  )
 
-    const mondayIndex = (d: Date) => (d.getDay() + 6) % 7
+  const streak = useMemo(() => {
+    let count = 0
+    const cursor = new Date(today)
+    while (completed.has(dateKey(cursor))) {
+      count++
+      cursor.setDate(cursor.getDate() - 1)
+    }
+    return count
+  }, [completed, today])
 
-    const currentMonday = new Date(today)
-    currentMonday.setDate(currentMonday.getDate() - mondayIndex(today))
+  const weekDone = useMemo(() => {
+    let count = 0
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(today)
+      d.setDate(d.getDate() - i)
+      if (completed.has(dateKey(d))) count++
+    }
+    return count
+  }, [completed, today])
 
-    const startMonday = new Date(currentMonday)
-    startMonday.setDate(startMonday.getDate() - 21)
+  const currentMonday = useMemo(() => {
+    const d = new Date(today)
+    d.setDate(d.getDate() - mondayIndex(today))
+    return d
+  }, [today])
 
-    const days = Array.from({ length: 28 }, (_, index) => {
-      const date = new Date(startMonday)
-      date.setDate(date.getDate() + index)
-      const isFuture = date.getTime() > today.getTime()
-      return {
-        date,
-        status: isFuture
-          ? "future"
-          : completed.has(dateKey(date))
-            ? "done"
-            : "rest",
-      }
+  const barData = useMemo(() => {
+    const data = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(currentMonday)
+      d.setDate(d.getDate() + i)
+      return completed.has(dateKey(d)) ? 1 : 0
     })
-
-    const realDays = days.filter((day) => day.status !== "future")
-
-    let streak = 0
-    for (
-      let index = realDays.length - 1;
-      index >= 0 && realDays[index].status === "done";
-      index--
-    )
-      streak++
-
     return {
-      days,
-      realDays,
-      streak,
-      weekDone: realDays.slice(-7).filter((day) => day.status === "done")
-        .length,
+      labels: ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"],
+      datasets: [
+        {
+          label: "Allenamenti",
+          data,
+          backgroundColor: "#c41e3a",
+          borderRadius: 4,
+        },
+      ],
     }
-  }, [workouts])
-
-  const barData = {
-    labels: ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"],
-    datasets: [
-      {
-        label: "Allenamenti",
-        data: [0, 0, 0, 0, 0, 0, 0],
-        backgroundColor: "#c41e3a",
-        borderRadius: 4,
-      },
-    ],
-  }
-
-  const currentWeekDays = activity.realDays.slice(-7)
-  const mondayIndex = (new Date().getDay() + 6) % 7
-  const currentMonday = new Date()
-  currentMonday.setDate(currentMonday.getDate() - mondayIndex)
-  currentMonday.setHours(0, 0, 0, 0)
-
-  const currentWeekData = [0, 0, 0, 0, 0, 0, 0]
-  currentWeekDays.forEach((day) => {
-    const dayOfWeekIndex = (day.date.getDay() + 6) % 7
-    if (day.status === "done") {
-      currentWeekData[dayOfWeekIndex] = 1
-    }
-  })
-
-  barData.datasets[0].data = currentWeekData
+  }, [completed, currentMonday])
 
   const options = {
     responsive: true,
@@ -183,9 +211,43 @@ export default function Dashboard() {
     },
   }
 
-  const activeDays = activity.realDays.filter(
-    (day) => day.status === "done",
+  const calendarDays = useMemo(
+    () => buildMonthCalendar(viewMonth, completed, today),
+    [viewMonth, completed, today],
+  )
+
+  const monthActiveDays = calendarDays.filter(
+    (d) => d.inMonth && d.status === "done",
   ).length
+
+  const isCurrentMonth =
+    viewMonth.getFullYear() === today.getFullYear() &&
+    viewMonth.getMonth() === today.getMonth()
+
+  const goPrevMonth = () => {
+    setViewMonth((prev) => {
+      const d = new Date(prev)
+      d.setMonth(d.getMonth() - 1)
+      return d
+    })
+  }
+
+  const goNextMonth = () => {
+    if (isCurrentMonth) return
+    setViewMonth((prev) => {
+      const d = new Date(prev)
+      d.setMonth(d.getMonth() + 1)
+      return d
+    })
+  }
+
+  const monthLabelRaw = viewMonth.toLocaleDateString("it-IT", {
+    month: "long",
+    year: "numeric",
+  })
+  const monthLabel =
+    monthLabelRaw.charAt(0).toUpperCase() + monthLabelRaw.slice(1)
+
   const totalVolume = workouts.reduce((sum, w) => sum + (w.volume || 0), 0)
 
   const programComplete = program
@@ -271,7 +333,7 @@ export default function Dashboard() {
           />
           <Metric
             label="Questa settimana"
-            value={`${activity.weekDone}/7`}
+            value={`${weekDone}/7`}
             icon="bi-check2-circle"
             detail="Giorni con allenamento"
           />
@@ -283,7 +345,7 @@ export default function Dashboard() {
           />
           <Metric
             label="Streak"
-            value={`${activity.streak} giorni`}
+            value={`${streak} giorni`}
             icon="bi-fire"
             detail="Giorni consecutivi"
           />
@@ -318,10 +380,33 @@ export default function Dashboard() {
                     style={{ height: "100%" }}
                   >
                     <Card.Body>
-                      <h5 className="dashboard-chart-title">Costanza</h5>
+                      <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <h5 className="dashboard-chart-title mb-0">Costanza</h5>
+                        <div className="dashboard-calendar-nav">
+                          <button
+                            type="button"
+                            onClick={goPrevMonth}
+                            aria-label="Mese precedente"
+                          >
+                            <i className="bi bi-chevron-left"></i>
+                          </button>
+                          <span className="dashboard-calendar-month-label">
+                            {monthLabel}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={goNextMonth}
+                            disabled={isCurrentMonth}
+                            aria-label="Mese successivo"
+                          >
+                            <i className="bi bi-chevron-right"></i>
+                          </button>
+                        </div>
+                      </div>
                       <p className="dashboard-heatmap-sub">
-                        Ultime 4 settimane · {activeDays} giorni attivi
+                        {monthActiveDays} giorni attivi questo mese
                       </p>
+
                       <div className="dashboard-heatmap">
                         <div className="dashboard-heatmap-weekdays">
                           <span>L</span>
@@ -332,11 +417,18 @@ export default function Dashboard() {
                           <span>S</span>
                           <span>D</span>
                         </div>
-                        <div className="dashboard-heatmap-grid">
-                          {activity.days.map((day) => (
+                        <div
+                          className="dashboard-heatmap-grid"
+                          style={{
+                            gridTemplateColumns: `repeat(${calendarDays.length / 7}, 1fr)`,
+                          }}
+                        >
+                          {calendarDays.map((day) => (
                             <span
                               key={dateKey(day.date)}
-                              className={`dashboard-heatmap-cell ${day.status}`}
+                              className={`dashboard-heatmap-cell ${
+                                day.inMonth ? day.status : "empty"
+                              }`}
                               title={day.date.toLocaleDateString("it-IT")}
                             />
                           ))}

@@ -49,6 +49,19 @@ export default function Auth() {
       setError("La password deve avere almeno 8 caratteri.")
       return
     }
+    const hasNumber = /\d/.test(password)
+    if (!hasNumber) {
+      setError("La password deve contenere almeno un numero.")
+      return
+    }
+
+    const hasSpecialChar = /[^a-zA-Z0-9\s]/.test(password)
+    if (!hasSpecialChar) {
+      setError(
+        "La password deve contenere almeno un carattere speciale (es. !@#$%^&*).",
+      )
+      return
+    }
     setLoading(true)
     try {
       const registerResponse = await authService.register({

@@ -139,7 +139,7 @@
 .dashboard-heatmap-sub {
   color: #9ba0a5;
   font-size: 12px;
-  margin: 2px 0 25px;
+  margin: 6px 0 14px;
 }
 
 .dashboard-heatmap {
@@ -167,31 +167,23 @@
 .dashboard-heatmap-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(7, 22px);
   grid-auto-flow: column;
   gap: 6px;
-}
-
-.dashboard-heatmap-cell.future {
-  background: transparent;
-  border: 1px dashed rgba(255, 255, 255, 0.06);
 }
 
 .dashboard-heatmap-cell {
   border-radius: 4px;
   width: 100%;
   height: 22px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .dashboard-heatmap-cell.done {
   background: #c41e3a;
+  border-color: transparent;
   box-shadow: 0 0 8px rgba(196, 30, 58, 0.4);
-}
-
-.dashboard-heatmap-cell.missed {
-  background: rgba(248, 113, 113, 0.15);
-  border: 1px solid rgba(248, 113, 113, 0.3);
 }
 
 .dashboard-heatmap-cell.rest {
@@ -199,39 +191,54 @@
   border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-.dashboard-heatmap-legend {
-  display: flex;
-  gap: 18px;
-  margin-top: 14px;
-  flex-wrap: wrap;
+.dashboard-heatmap-cell.future {
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.06);
 }
 
-.dashboard-heatmap-legend span {
+.dashboard-heatmap-cell.empty {
+  background: transparent;
+  border: none;
+}
+
+.dashboard-calendar-nav {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 11px;
+  gap: 8px;
+  margin: 0 auto;
+}
+
+.dashboard-calendar-nav button {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: #9ba0a5;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
 }
 
-.dashboard-heatmap-dot {
-  display: inline-block;
-  width: 9px;
-  height: 9px;
-  border-radius: 2px;
+.dashboard-calendar-nav button:hover:not(:disabled) {
+  border-color: rgba(196, 30, 58, 0.5);
+  color: #ffffff;
 }
 
-.dashboard-heatmap-dot.done {
-  background: #c41e3a;
+.dashboard-calendar-nav button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
-.dashboard-heatmap-dot.missed {
-  background: rgba(248, 113, 113, 0.4);
-  border: 1px solid rgba(248, 113, 113, 0.5);
-}
-
-.dashboard-heatmap-dot.rest {
-  background: rgba(255, 255, 255, 0.08);
+.dashboard-calendar-month-label {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 120px;
+  text-align: center;
 }
 
 .dashboard-program-card {
@@ -487,6 +494,11 @@
   .dashboard-heatmap-weekdays span {
     height: 18px;
   }
+
+  .dashboard-calendar-month-label {
+    min-width: 100px;
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -519,5 +531,9 @@
 
   .flip-card-container {
     height: 260px;
+  }
+
+  .dashboard-heatmap-weekdays span {
+    font-size: 9px;
   }
 }
