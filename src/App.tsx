@@ -14,6 +14,7 @@ import ProtectedRoute from "./components/common/ProtectedRoute"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "./Styles/global.css"
+import Admin from "./components/admin/Admin"
 
 function App() {
   return (
@@ -106,6 +107,16 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <WorkoutDetail />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Admin />
               </Layout>
             </ProtectedRoute>
           }

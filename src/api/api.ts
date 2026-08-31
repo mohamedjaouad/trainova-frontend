@@ -39,5 +39,13 @@ export const authService = {
 
   getMe: () => apiClient.get("/users/me"),
 }
+export const adminService = {
+  getUsers: () => apiClient.get("/api/admin/users"),
+  updateUser: (
+    id: string,
+    data: { fullName?: string; email?: string; isAdmin?: boolean },
+  ) => apiClient.put(`/api/admin/users/${id}`, data),
+  deleteUser: (id: string) => apiClient.delete(`/api/admin/users/${id}`),
+}
 
 export default apiClient

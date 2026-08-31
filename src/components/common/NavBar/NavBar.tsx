@@ -35,7 +35,12 @@ export default function NavBar() {
       .catch(() => setUser(null))
   }, [])
 
+  const isAdmin = localStorage.getItem("isAdmin") === "true"
+
   const navLinks = [
+    ...(isAdmin
+      ? [{ path: "/admin", label: "Admin", icon: "bi-shield-lock-fill" }]
+      : []),
     { path: "/dashboard", label: "Dashboard", icon: "bi-grid-1x2-fill" },
     { path: "/ai-coach", label: "AI Coach", icon: "bi-cpu-fill" },
     { path: "/workout-log", label: "Workouts", icon: "bi bi-activity" },

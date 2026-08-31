@@ -27,6 +27,19 @@ export default function Auth() {
       const token = response.data.token
       if (token) {
         localStorage.setItem("token", token)
+
+        let isAdmin = response.data.isAdmin
+        if (isAdmin === undefined) {
+          try {
+            const payload = JSON.parse(atob(token.split(".")[1]))
+            isAdmin = payload.isAdmin || false
+          } catch {
+            isAdmin = false
+          }
+        }
+
+        localStorage.setItem("isAdmin", String(isAdmin))
+
         navigate("/dashboard")
       } else {
         setError("Token non ricevuto. Riprova.")
@@ -75,6 +88,19 @@ export default function Auth() {
       const token = loginResponse.data.token
       if (token) {
         localStorage.setItem("token", token)
+
+        let isAdmin = loginResponse.data.isAdmin
+        if (isAdmin === undefined) {
+          try {
+            const payload = JSON.parse(atob(token.split(".")[1]))
+            isAdmin = payload.isAdmin || false
+          } catch {
+            isAdmin = false
+          }
+        }
+
+        localStorage.setItem("isAdmin", String(isAdmin))
+
         navigate("/profile/onboarding")
       } else {
         setError("Login automatico fallito. Riprova.")

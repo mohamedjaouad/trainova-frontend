@@ -1,0 +1,102 @@
+.admin-page {
+  padding: 24px 0 60px;
+  background: #0a0809;
+  min-height: 100vh;
+}
+
+.admin-header {
+  margin-bottom: 28px;
+  padding: 20px 24px;
+  background: rgba(10, 8, 9, 0.62);
+  backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(196, 30, 58, 0.3);
+  border-radius: 6px;
+}
+
+.admin-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.admin-subtitle {
+  color: #9ba0a5;
+  font-size: 14px;
+  margin: 4px 0 0;
+}
+
+.admin-card {
+  background: rgba(10, 8, 9, 0.62) !important;
+  backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(196, 30, 58, 0.2) !important;
+  border-radius: 6px !important;
+}
+
+.admin-card .card-body {
+  padding: 22px !important;
+}
+
+.admin-table {
+  color: #ffffff;
+  font-size: 13px;
+  --bs-table-bg: transparent;
+  --bs-table-color: #ffffff;
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.04);
+  --bs-table-hover-color: #ffffff;
+  --bs-table-border-color: rgba(255, 255, 255, 0.08);
+  background-color: transparent !important;
+}
+
+.admin-table thead th {
+  background: rgba(255, 255, 255, 0.02) !important;
+  color: #9ba0a5 !important;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 12px;
+}
+
+.admin-table tbody td {
+  background-color: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 10px 12px;
+  color: #e8eaeb !important;
+}
+
+.modal-content {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(196, 30, 58, 0.3) !important;
+  border-radius: 6px !important;
+}
+
+.modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.form-control {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(196, 30, 58, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.form-control:focus {
+  border-color: #c41e3a !important;
+  box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.15) !important;
+}
+
+.form-check-input {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(196, 30, 58, 0.3) !important;
+}
+
+.form-check-input:checked {
+  background-color: #c41e3a !important;
+  border-color: #c41e3a !important;
+}
