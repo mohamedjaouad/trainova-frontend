@@ -14,15 +14,37 @@ const INITIAL_MESSAGES: Message[] = [
   },
 ]
 
+const STORAGE_KEY = "trainova_coach_chat"
+
+function loadMessages(): Message[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw)
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed
+      }
+    }
+  } catch {}
+  return INITIAL_MESSAGES
+}
+
 export default function CoachChat() {
-  const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES)
+  const [messages, setMessages] = useState<Message[]>(loadMessages)
   const [input, setInput] = useState("")
   const [sending, setSending] = useState(false)
   const logRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    logRef.current?.scrollTo({ top: logRef.current.scrollHeight, behavior: "smooth" })
+    logRef.current?.scrollTo({
+      top: logRef.current.scrollHeight,
+      behavior: "smooth",
+    })
   }, [messages, sending])
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages))
+  }, [messages])
 
   async function send() {
     const text = input.trim()
@@ -43,14 +65,35 @@ export default function CoachChat() {
       ])
     } catch (error) {
       console.error("Errore nella chat AI", error)
-      setMessages((prev) => [...prev, { role: "ai", text: "Non riesco a rispondere in questo momento. Verifica che il backend sia avviato e riprova." }])
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "ai",
+          text: "Non riesco a rispondere in questo momento. Verifica che il backend sia avviato e riprova.",
+        },
+      ])
     } finally {
       setSending(false)
     }
   }
 
+  function newConversation() {
+    setMessages(INITIAL_MESSAGES)
+  }
+
   return (
     <div className="cc-wrap">
+      <div className="cc-header-actions">
+        <button
+          type="button"
+          className="cc-new-chat-btn"
+          onClick={newConversation}
+          title="Inizia una nuova conversazione"
+        >
+          <i className="bi bi-arrow-clockwise"></i> Nuova conversazione
+        </button>
+      </div>
+
       <div className="cc-log" ref={logRef}>
         {messages.map((m, i) => (
           <div key={i} className={`cc-row ${m.role}`}>
@@ -66,7 +109,9 @@ export default function CoachChat() {
         ))}
         {sending && (
           <div className="cc-row ai">
-            <div className="cc-avatar"><i className="bi bi-cpu"></i></div>
+            <div className="cc-avatar">
+              <i className="bi bi-cpu"></i>
+            </div>
             <div className="cc-bubble">Sto pensando...</div>
           </div>
         )}
@@ -82,7 +127,12 @@ export default function CoachChat() {
           disabled={sending}
         />
 
-        <button className="cc-send" onClick={send} disabled={sending} aria-label="Invia messaggio">
+        <button
+          className="cc-send"
+          onClick={send}
+          disabled={sending}
+          aria-label="Invia messaggio"
+        >
           <i className="bi bi-send"></i>
         </button>
       </div>
