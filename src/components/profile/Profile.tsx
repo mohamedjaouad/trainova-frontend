@@ -128,6 +128,8 @@ export default function Profile() {
       if (fileInputRef.current) {
         fileInputRef.current.value = ""
       }
+
+      window.location.reload()
     } catch (error) {
       console.error("Errore nel caricamento dell'avatar", error)
       alert("Errore nel caricamento dell'immagine. Riprova.")
